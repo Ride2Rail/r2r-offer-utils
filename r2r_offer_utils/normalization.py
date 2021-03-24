@@ -3,7 +3,9 @@
 from typing import Mapping
 import math
 import sys
-
+#############################################################################
+#############################################################################
+#############################################################################
 def zscore(offers: Mapping) -> Mapping:
     n          = 0
     sum        = 0.0
@@ -28,9 +30,19 @@ def zscore(offers: Mapping) -> Mapping:
                 else:
                     z_scores[o] = (value - average)/std
     return z_scores
-
-
-
+#############################################################################
+#############################################################################
+#############################################################################
+def flipped_zscore(offers: Mapping) -> Mapping:
+    z_scores = zscore(offers)
+    for id in z_scores:
+        value = z_scores[id]
+        if value != 0:
+            z_scores[id] = 1 - value
+    return z_scores
+#############################################################################
+#############################################################################
+#############################################################################
 def minmaxscore(offers: Mapping) -> Mapping:
 
     min = sys.float_info.max
@@ -53,6 +65,49 @@ def minmaxscore(offers: Mapping) -> Mapping:
             if value is not None:
                     minmax_scores[o] = (value-min)/diff
     return minmax_scores
+#############################################################################
+#############################################################################
+#############################################################################
+def flipped_minmaxscore(offers: Mapping) -> Mapping:
+    minmax_scores = minmaxscore(offers)
+    for id in minmax_scores:
+        value = minmax_scores[id]
+        if value != 0:
+            minmax_scores[id] = 1 - value
+    return minmax_scores
+#############################################################################
+#############################################################################
+#############################################################################
+def aggregate_a_quantity_over_triplegs(
+        tripleg_ids,
+        weights,
+        quantity):
+    sum        = 0.0
+    result     = 0.0
+    num_values = 0
+
+    for tripleg_id in tripleg_ids:
+        weight = weights[tripleg_id]
+        value  = quantity[tripleg_id]
+        if (weight is not None):
+            sum = sum + weight
+            if (value is not None):
+                result += weight*value
+                num_values += 1
+    if (sum > 0)and(num_values > 0):
+        result /= sum
+    else:
+        return None
+    return result
+#############################################################################
+#############################################################################
+#############################################################################
+
+    return result
+#############################################################################
+#############################################################################
+#############################################################################
+
 
 
 if __name__ == '__main__':
