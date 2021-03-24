@@ -6,7 +6,7 @@ import sys
 #############################################################################
 #############################################################################
 #############################################################################
-def zscore(offers: Mapping) -> Mapping:
+def zscore(offers: Mapping, flipped = False) -> Mapping:
     n          = 0
     sum        = 0.0
     sum_square = 0.0
@@ -28,22 +28,15 @@ def zscore(offers: Mapping) -> Mapping:
                 if std == 0:
                     z_scores[o] = 0
                 else:
-                    z_scores[o] = (value - average)/std
+                    if not flipped:
+                        z_scores[o] = (value - average)/std
+                    else:
+                        z_scores[o] = 1 - (value - average) / std
     return z_scores
 #############################################################################
 #############################################################################
 #############################################################################
-def flipped_zscore(offers: Mapping) -> Mapping:
-    z_scores = zscore(offers)
-    for id in z_scores:
-        value = z_scores[id]
-        if value != 0:
-            z_scores[id] = 1 - value
-    return z_scores
-#############################################################################
-#############################################################################
-#############################################################################
-def minmaxscore(offers: Mapping) -> Mapping:
+def minmaxscore(offers: Mapping, flipped = False) -> Mapping:
 
     min = sys.float_info.max
     max = sys.float_info.min
@@ -63,17 +56,10 @@ def minmaxscore(offers: Mapping) -> Mapping:
         for o in offers:
             value = offers[o]
             if value is not None:
-                    minmax_scores[o] = (value-min)/diff
-    return minmax_scores
-#############################################################################
-#############################################################################
-#############################################################################
-def flipped_minmaxscore(offers: Mapping) -> Mapping:
-    minmax_scores = minmaxscore(offers)
-    for id in minmax_scores:
-        value = minmax_scores[id]
-        if value != 0:
-            minmax_scores[id] = 1 - value
+                    if not flipped:
+                        minmax_scores[o] = (value-min)/diff
+                    else:
+                        minmax_scores[o] = 1 - (value-min)/diff
     return minmax_scores
 #############################################################################
 #############################################################################
