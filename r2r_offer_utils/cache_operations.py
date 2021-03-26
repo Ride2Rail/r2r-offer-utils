@@ -1,0 +1,62 @@
+import redis
+import rejson
+import json
+
+#############################################################################
+#############################################################################
+#############################################################################
+def extract_data_from_cache(
+        pa_cache,
+        pa_request_id,
+        pa_offer_level_items,
+        pa_tripleg_level_items):
+
+    output_offer_level_items   = {}
+    output_tripleg_level_items = {}
+
+    offer_ids  = pa_cache.jsonget('{}:offers'.format(pa_request_id))
+    #offer_ids = pa_cache.lrange('{}:offers'.format(request_id), 0, -1)
+
+    output_offer_level_items["offer_ids"] = offer_ids
+    if offer_ids  is not None:
+        for offer in offer_ids:
+            output_offer_level_items[offer] = {}
+            if len(pa_tripleg_level_items) > 0:
+                output_tripleg_level_items[offer] = {}
+            for offer_level_item in pa_offer_level_items:
+                # assembly key for offer level
+                temp_key  = pa_request_id + ":" + offer + ":" + offer_level_item
+                # extract offer level data from cache
+                temp_data = pa_cache.jsonget(temp_key)
+                # temp_data = pa_cache.get(temp_key)
+                output_offer_level_items[offer][offer_level_item] = temp_data
+                # extract information at the tripleg level
+                if len(pa_tripleg_level_items) > 0:
+                    temp_key      = pa_request_id + ":" + offer + ":" + "legs"
+                    tripleg_ids   = pa_cache.jsonget(temp_key)
+                    #tripleg_ids  = pa_cache.get(temp_key)
+                    output_tripleg_level_items[offer]["triplegs"] = tripleg_ids
+                    for tripleg_id in tripleg_ids:
+                        output_tripleg_level_items[offer][tripleg_id] = {}
+                        for tripleg_level_item in pa_tripleg_level_items:
+                            temp_key = pa_request_id + ":" + offer + ":" + tripleg_id + ":" + tripleg_level_item
+                            tripleg_data   = pa_cache.jsonget(temp_key)
+                            #tripleg_data  = pa_cache.get(temp_key)
+                            output_tripleg_level_items[offer][tripleg_id][tripleg_level_item] = tripleg_data
+    return output_offer_level_items, output_tripleg_level_items
+#############################################################################
+#############################################################################
+#############################################################################
+def store_simple_data_to_cache(
+    pa_cache,
+    pa_request_id,
+    pa_data,
+    pa_sub_key
+):
+    for offer in pa_data:
+        temp_key = pa_request_id + ":" + offer + ":" + pa_sub_key
+        pa_cache.set(temp_key, pa_data[offer])
+    return 1
+#############################################################################
+#############################################################################
+#############################################################################
