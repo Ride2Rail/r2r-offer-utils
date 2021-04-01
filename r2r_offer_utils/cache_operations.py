@@ -51,7 +51,7 @@ def store_simple_data_to_cache(
     pa_sub_key
 ):
     for offer in pa_data:
-        temp_key = pa_request_id + ":" + offer + ":" + pa_sub_key
+        temp_key = "{}:{}:{}".format(pa_request_id,offer,pa_sub_key)
         pa_cache.set(temp_key, pa_data[offer])
     return 1
 #############################################################################
