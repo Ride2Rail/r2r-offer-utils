@@ -7,10 +7,10 @@ from setuptools import setup, find_packages
 setup(
     name='r2r_offer_utils',
     version='0.1',
-    author='',
+    author='Ride2Rail Project',
     author_email='',
     license='MIT',
-    description='',
+    description='Utilities for building services in the Ride2Rail project',
     long_description=__doc__,
     url='https://github.com/Ride2Rail/r2r-offer-utils',
     packages=find_packages(),
@@ -21,5 +21,6 @@ setup(
         },
     },
     install_requires=[],
-    zip_safe=False,
+    py_modules=[],
+    zip_safe=False
 )
