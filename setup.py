@@ -1,26 +1,23 @@
 #!/usr/bin/env python3
-"""# Ride2Rail offer categorizer utils
-"""
+"""Ride2Rail offer categorizer utils"""
 
-from setuptools import setup, find_packages
+from distutils.core import setup
+
+packages = ['r2r_offer_utils']
+
+package_data = {'': ['*']}
 
 setup(
     name='r2r_offer_utils',
-    version='0.1',
+    version='0.2.0',
+    description='Utilities for building services in the Ride2Rail project.',
     author='Ride2Rail Project',
-    author_email='',
+    author_email='cristian.consonni@eurecat.org',
+    url='https://github.com/Ride2Rail/r2r-offer-utils/',
     license='MIT',
-    description='Utilities for building services in the Ride2Rail project',
+    description='Utilities for building services in the Ride2Rail project.',
     long_description=__doc__,
-    url='https://github.com/Ride2Rail/r2r-offer-utils',
-    packages=find_packages(),
-    entry_points={},
-    options={
-        'build_scripts': {
-            'executable': 'python3',
-        },
-    },
-    install_requires=[],
-    py_modules=[],
+    packages=packages,
+    package_data=package_data,
     zip_safe=False
 )
