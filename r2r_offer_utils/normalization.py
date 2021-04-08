@@ -52,14 +52,17 @@ def minmaxscore(offers: Mapping, flipped = False) -> Mapping:
 
     minmax_scores = {}
     diff = max - min
-    if (diff > 0) and (n > 0):
+    if (n > 0):
         for o in offers:
             value = offers[o]
             if value is not None:
+                if(diff > 0):
                     if not flipped:
                         minmax_scores[o] = (value-min)/diff
                     else:
                         minmax_scores[o] = 1 - (value-min)/diff
+                else:
+                    minmax_scores[o] = 0.5
     return minmax_scores
 #############################################################################
 #############################################################################

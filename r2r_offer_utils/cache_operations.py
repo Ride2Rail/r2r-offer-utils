@@ -1,14 +1,37 @@
 import redis
-import rejson
-import json
+import logging
+import time
 
 #############################################################################
 #############################################################################
 #############################################################################
+# Description:
+# A simple procedure to extract data from the cache. The procedure is applicable inside a feature collector to
+# extract values of a selected determinant factor (attributes) at the offer and at the tripleg level.
+#
+# Inputs:
+#
+# pa_cache - cache identifier
+# pa_request_id - request id for which the data should be extracted from cache
+# pa_offer_level_items - list of attributes at the offer level that should be extracted from the cache
+# pa_tripleg_level_items -  list of attributes at the tripleg level that should be extracted from the cache
+#
+# Outputs:
+#
+# output_offer_level_items - dictionary containing values of requested attributed at the offer level. It contains
+#                            a list of offer identifiers named "offer_ids" and dictionaries containing values of
+#                            requested attributes identified by offer id
+# output_tripleg_level_items - dictionary containing values of requested attributed at the tripledlevel. For each
+#                              offer id it contains a list of tripleg identifiers named "triplegs" and dictionaries
+#                              containing values of requested attributes identified by composite keys
 def extract_data_from_cache(
+        # cache identifier
         pa_cache,
+        # request id for which the data should be extracted from cache
         pa_request_id,
+        # list of attributes at the offer level that should be extracted from the cache
         pa_offer_level_items,
+        # list of attributes at the tripleg level that should be extracted from the cache
         pa_tripleg_level_items):
 
     output_offer_level_items   = {}
@@ -44,16 +67,86 @@ def extract_data_from_cache(
 #############################################################################
 #############################################################################
 #############################################################################
+# Description:
+# Wrapper procedure for reading operation from cache used by feature collectors. Wrapper ensures repeated reading
+# attempts when reading from cache is failing. After a certain number of unsuccessful attempts an error is raised.
+def read_data_from_cache_wrapper(
+        # cache identifier
+        pa_cache,
+        # request id for which the data should be extracted from cache
+        pa_request_id,
+        # list of attributes at the offer level that should be extracted from the cache
+        pa_offer_level_items,
+        # list of attributes at the tripleg level that should be extracted from the cache
+        pa_tripleg_level_items):
+    retries = 5
+
+    while True:
+        try:
+            return extract_data_from_cache(pa_cache, pa_request_id, pa_offer_level_items, pa_tripleg_level_items)
+        except redis.exceptions.ConnectionError as exc:
+            logging.debug("Reading from cache by a feature collector failed. Retries remaining: {}".format(retries))
+            if retries == 0:
+                raise exc
+            retries -= 1
+            time.sleep(0.1)
+#############################################################################
+#############################################################################
+#############################################################################
+# A simple procedure to store to the cache data
+#
+# Inputs:
+#
+# pa_cache - cache identifier
+# pa_request_id - dictionary containing data indexed by offer ids that are supposed to be stored to cache
+# pa_data - dictionary containing data indexed by offer ids that are supposed to be stored to cache
+# pa_sub_key - subkey (final part of the composite key) that is added to request_id and offer_id under which the data
+#              is stored in cache
+#
+# Outputs:
+#
+# procedure returns value 1 is the writing was successful
+
 def store_simple_data_to_cache(
+    # cache identifier
     pa_cache,
+    # request id for which the data should be stored to cache
     pa_request_id,
+    # dictionary containing data indexed by offer ids that are supposed to be stored to cache
     pa_data,
+    # subkey (final part of the composite key) that is added to request_id and offer_id under which the data is stored in cache
     pa_sub_key
 ):
     for offer in pa_data:
         temp_key = "{}:{}:{}".format(pa_request_id,offer,pa_sub_key)
         pa_cache.set(temp_key, pa_data[offer])
     return 1
+#############################################################################
+#############################################################################
+#############################################################################
+# Description:
+# Wrapper procedure for writing operation to cache used by feature collectors. Wrapper ensures repeated writing attempts
+#  when writing to cache is failing. After a certain number of unsuccessful attempts an error is raised.
+def store_simple_data_to_cache_wrapper(
+        # cache identifier
+        pa_cache,
+        # request id for which the data should be stored to cache
+        pa_request_id,
+        # dictionary containing data indexed by offer ids that are supposed to be stored to cache
+        pa_data,
+        # subkey (final part of the composite key) that is added to request_id and offer_id under which the data is stored in cache
+        pa_sub_key):
+    retries = 5
+
+    while True:
+        try:
+            return store_simple_data_to_cache(pa_cache, pa_request_id, pa_data, pa_sub_key)
+        except redis.exceptions.ConnectionError as exc:
+            logging.debug("Writing to cache by a feature collector failed. Retries remaining: {}".format(retries))
+            if retries == 0:
+                raise exc
+            retries -= 1
+            time.sleep(0.1)
 #############################################################################
 #############################################################################
 #############################################################################
