@@ -10,7 +10,7 @@ setup(
     author='Ride2Rail Project',
     author_email='',
     license='MIT',
-    description='Utilities for building services in the Ride2Rail project',
+    description='Utilities for building services in the Ride2Rail project.',
     long_description=__doc__,
     url='https://github.com/Ride2Rail/r2r-offer-utils',
     packages=find_packages(),
