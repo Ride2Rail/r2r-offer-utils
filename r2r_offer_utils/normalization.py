@@ -6,6 +6,16 @@ import sys
 #############################################################################
 #############################################################################
 #############################################################################
+# A procedure implementing calculation of the z-score weights for a determinant factors across all offers
+# Inputs:
+#
+# offers  - dictionary containing values  of a determinant factor, values are identified by offer indentifiers as keys
+# flipped - binary value indicating whether resulting weights need to be flipped (i.e. substracted from 1)
+#
+# Outputs:
+#
+# z_score - dictionary containing z-score values for a determinant factor, values are identified by offer identifiers as keys
+
 def zscore(offers: Mapping, flipped = False) -> Mapping:
     n          = 0
     sum        = 0.0
@@ -36,6 +46,16 @@ def zscore(offers: Mapping, flipped = False) -> Mapping:
 #############################################################################
 #############################################################################
 #############################################################################
+# A procedure implementing calculation of the minmax-score weights for a determinant factors across all offers
+# Inputs:
+#
+# offers  - dictionary containing values  of a determinant factor, values are identified by offer indentifiers as keys
+# flipped - binary value indicating whether resulting weights need to be flipped (i.e. substracted from 1)
+#
+# Outputs:
+#
+# minmax_score - dictionary containing minmax-score values for a determinant factor, values are identified by offer identifiers as keys
+
 def minmaxscore(offers: Mapping, flipped = False) -> Mapping:
 
     min = sys.float_info.max
@@ -67,6 +87,20 @@ def minmaxscore(offers: Mapping, flipped = False) -> Mapping:
 #############################################################################
 #############################################################################
 #############################################################################
+# A procedure implementing aggregation of values of a determinant factor for an offer over trip legs belonging
+# to the offer
+
+# Inputs:
+#
+# tripleg_ids - array of trip leg identifiers to be aggregated
+# weights     - dictionary containing weights identified by keys (trip leg key indentifiers) that are used as weights
+#               in the aggregation. Typically, the duration of trip legs is used as a weight.
+# quantity    - dictionary containing values of a determinant factor (identified by trip leg indetifiers) to be
+#               aggregated
+#
+# Outputs:
+#
+# result      - values of a determinant factor aggregated over trip legs
 def aggregate_a_quantity_over_triplegs(
         tripleg_ids,
         weights,
