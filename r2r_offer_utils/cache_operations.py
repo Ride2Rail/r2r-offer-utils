@@ -93,7 +93,7 @@ def read_data_from_cache_wrapper(
 #############################################################################
 #############################################################################
 #############################################################################
-# A simple procedure to store to the cache data
+# A simple procedure to store data to the cache.
 #
 # Inputs:
 #
@@ -105,7 +105,7 @@ def read_data_from_cache_wrapper(
 #
 # Outputs:
 #
-# procedure returns value 1 is the writing was successful
+# The procedure returns value 1 if the writing was successful.
 
 def store_simple_data_to_cache(
     # cache identifier
