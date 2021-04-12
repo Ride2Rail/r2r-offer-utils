@@ -6,11 +6,11 @@ import sys
 #############################################################################
 #############################################################################
 #############################################################################
-# A procedure implementing calculation of the z-score weights for a determinant factors across all offers
+# A procedure implementing calculation of the z-score weights for a determinant factor across all offers
 # Inputs:
 #
-# offers  - dictionary containing values  of a determinant factor, values are identified by offer indentifiers as keys
-# flipped - binary value indicating whether resulting weights need to be flipped (i.e. substracted from 1)
+# offers  - dictionary containing values  of a determinant factor, values are identified by offer identifiers as keys
+# flipped - binary value indicating whether resulting weights need to be flipped (i.e. subtracted from 1)
 #
 # Outputs:
 #
@@ -46,11 +46,11 @@ def zscore(offers: Mapping, flipped = False) -> Mapping:
 #############################################################################
 #############################################################################
 #############################################################################
-# A procedure implementing calculation of the minmax-score weights for a determinant factors across all offers
+# A procedure implementing calculation of the minmax-score weights for a determinant factor across all offers
 # Inputs:
 #
-# offers  - dictionary containing values  of a determinant factor, values are identified by offer indentifiers as keys
-# flipped - binary value indicating whether resulting weights need to be flipped (i.e. substracted from 1)
+# offers  - dictionary containing values  of a determinant factor, values are identified by offer identifiers as keys
+# flipped - binary value indicating whether resulting weights need to be flipped (i.e. subtracted from 1)
 #
 # Outputs:
 #
