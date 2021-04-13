@@ -66,6 +66,7 @@ def extract_data_from_cache(
                         pipe.get(temp_key)
 
         temp_data = pipe.execute()
+        index = 0
         for offer in offer_ids:
         	for offer_level_item in pa_offer_level_items: 		
             	output_offer_level_items[offer][offer_level_item] = temp_data[index]
