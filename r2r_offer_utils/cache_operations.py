@@ -29,6 +29,8 @@ def extract_data_from_cache(
         pa_cache,
         # request id for which the data should be extracted from cache
         pa_request_id,
+        # TODO add list of attributes at the request level?
+        # pa_request_level_items,
         # list of attributes at the offer level that should be extracted from the cache
         pa_offer_level_items,
         # list of attributes at the tripleg level that should be extracted from the cache
@@ -39,18 +41,18 @@ def extract_data_from_cache(
 
     offer_ids = pa_cache.lrange('{}:offers'.format(pa_request_id), 0, -1)
     output_offer_level_items["offer_ids"] = offer_ids
-    if offer_ids  is not None:
+    pipe = pa_cache.pipeline()
+    if offer_ids is not None:
         for offer in offer_ids:
-            output_offer_level_items[offer] = {}
+            output_offer_level_items[offer] = {}     
             for offer_level_item in pa_offer_level_items:
                 # assembly key for offer level
                 temp_key  = "{}:{}:{}".format(pa_request_id,offer,offer_level_item)
                 # extract offer level data from cache
                 if (offer_level_item == "bookable_total") or (offer_level_item == "complete_total"):
-                    temp_data = pa_cache.hgetall(temp_key)
+                    pipe.hgetall(temp_key)
                 else:
-                    temp_data = pa_cache.get(temp_key)
-                output_offer_level_items[offer][offer_level_item] = temp_data
+                    pipe.get(temp_key)        
             # extract information at the tripleg level
             output_tripleg_level_items[offer] = {}
             if len(pa_tripleg_level_items) > 0:
@@ -61,9 +63,22 @@ def extract_data_from_cache(
                     output_tripleg_level_items[offer][tripleg_id] = {}
                     for tripleg_level_item in pa_tripleg_level_items:
                         temp_key = "{}:{}:{}:{}".format(pa_request_id, offer, tripleg_id,tripleg_level_item)
-                        tripleg_data  = pa_cache.get(temp_key)
-                        output_tripleg_level_items[offer][tripleg_id][tripleg_level_item] = tripleg_data
+                        pipe.get(temp_key)
+
+        temp_data = pipe.execute()
+        for offer in offer_ids:
+        	for offer_level_item in pa_offer_level_items: 		
+            	output_offer_level_items[offer][offer_level_item] = temp_data[index]
+            	index += 1
+            if len(pa_tripleg_level_items) > 0:
+                tripleg_ids  = output_tripleg_level_items[offer]["triplegs"]
+                for tripleg_id in tripleg_ids:
+                    for tripleg_level_item in pa_tripleg_level_items:
+                        output_tripleg_level_items[offer][tripleg_id][tripleg_level_item] = temp_data[index]
+                        index += 1
+
     return output_offer_level_items, output_tripleg_level_items
+
 #############################################################################
 #############################################################################
 #############################################################################
@@ -117,9 +132,11 @@ def store_simple_data_to_cache(
     # subkey (final part of the composite key) that is added to request_id and offer_id under which the data is stored in cache
     pa_sub_key
 ):
+    pipe = pa_cache.pipeline()
     for offer in pa_data:
         temp_key = "{}:{}:{}".format(pa_request_id,offer,pa_sub_key)
-        pa_cache.set(temp_key, pa_data[offer])
+        pipe.set(temp_key, pa_data[offer])
+    pipe.execute()
     return 1
 #############################################################################
 #############################################################################
