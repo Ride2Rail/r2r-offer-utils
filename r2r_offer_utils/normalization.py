@@ -93,9 +93,9 @@ def minmaxscore(offers: Mapping, flipped = False) -> Mapping:
 # Inputs:
 #
 # tripleg_ids - array of trip leg identifiers to be aggregated
-# weights     - dictionary containing weights identified by keys (trip leg key indentifiers) that are used as weights
+# weights     - a dictionary containing weights identified by keys (trip leg key identifiers) that are used as weights
 #               in the aggregation. Typically, the duration of trip legs is used as a weight.
-# quantity    - dictionary containing values of a determinant factor (identified by trip leg indetifiers) to be
+# quantity    - a dictionary containing values of a determinant factor (identified by trip leg identifiers) to be
 #               aggregated
 #
 # Outputs:
