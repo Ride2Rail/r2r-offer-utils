@@ -44,7 +44,7 @@ def extract_data_from_cache(
     pipe = pa_cache.pipeline()
     if offer_ids is not None:
         for offer in offer_ids:
-            output_offer_level_items[offer] = {}     
+            output_offer_level_items[offer] = {}
             for offer_level_item in pa_offer_level_items:
                 # assembly key for offer level
                 temp_key  = "{}:{}:{}".format(pa_request_id,offer,offer_level_item)
@@ -52,7 +52,7 @@ def extract_data_from_cache(
                 if (offer_level_item == "bookable_total") or (offer_level_item == "complete_total"):
                     pipe.hgetall(temp_key)
                 else:
-                    pipe.get(temp_key)        
+                    pipe.get(temp_key)
             # extract information at the tripleg level
             output_tripleg_level_items[offer] = {}
             if len(pa_tripleg_level_items) > 0:
@@ -64,13 +64,12 @@ def extract_data_from_cache(
                     for tripleg_level_item in pa_tripleg_level_items:
                         temp_key = "{}:{}:{}:{}".format(pa_request_id, offer, tripleg_id,tripleg_level_item)
                         pipe.get(temp_key)
-
         temp_data = pipe.execute()
         index = 0
         for offer in offer_ids:
-        	for offer_level_item in pa_offer_level_items: 		
-            	output_offer_level_items[offer][offer_level_item] = temp_data[index]
-            	index += 1
+            for offer_level_item in pa_offer_level_items:
+                output_offer_level_items[offer][offer_level_item] = temp_data[index]
+                index += 1
             if len(pa_tripleg_level_items) > 0:
                 tripleg_ids  = output_tripleg_level_items[offer]["triplegs"]
                 for tripleg_id in tripleg_ids:
