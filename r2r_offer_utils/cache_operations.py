@@ -7,22 +7,22 @@ import time
 #############################################################################
 # Description:
 # A simple procedure to extract data from the cache. The procedure is applicable inside a feature collector to
-# extract values of a selected determinant factor (attributes) at the offer and at the tripleg level.
+# extract values of a selected determinant factor (attributes) at the offer and at the trip leg level.
 #
 # Inputs:
 #
 # pa_cache - cache identifier
 # pa_request_id - request id for which the data should be extracted from cache
 # pa_offer_level_items - list of attributes at the offer level that should be extracted from the cache
-# pa_tripleg_level_items -  list of attributes at the tripleg level that should be extracted from the cache
+# pa_tripleg_level_items -  list of attributes at the trip leg level that should be extracted from the cache
 #
 # Outputs:
 #
 # output_offer_level_items - dictionary containing values of requested attributed at the offer level. It contains
 #                            a list of offer identifiers named "offer_ids" and dictionaries containing values of
 #                            requested attributes identified by offer id
-# output_tripleg_level_items - dictionary containing values of requested attributed at the tripledlevel. For each
-#                              offer id it contains a list of tripleg identifiers named "triplegs" and dictionaries
+# output_tripleg_level_items - dictionary containing values of requested attributed at the trip leg level. For each
+#                              offer id it contains a list of trip leg identifiers named "trip legs" and dictionaries
 #                              containing values of requested attributes identified by composite keys
 def extract_data_from_cache(
         # cache identifier
@@ -33,7 +33,7 @@ def extract_data_from_cache(
         # pa_request_level_items,
         # list of attributes at the offer level that should be extracted from the cache
         pa_offer_level_items,
-        # list of attributes at the tripleg level that should be extracted from the cache
+        # list of attributes at the trip leg level that should be extracted from the cache
         pa_tripleg_level_items):
 
     output_offer_level_items   = {}
@@ -53,7 +53,7 @@ def extract_data_from_cache(
                     pipe.hgetall(temp_key)
                 else:
                     pipe.get(temp_key)
-            # extract information at the tripleg level
+            # extract information at the trip leg level
             output_tripleg_level_items[offer] = {}
             if len(pa_tripleg_level_items) > 0:
                 temp_key      = "{}:{}:legs".format(pa_request_id,offer)
@@ -78,7 +78,6 @@ def extract_data_from_cache(
                         index += 1
 
     return output_offer_level_items, output_tripleg_level_items
-
 #############################################################################
 #############################################################################
 #############################################################################
@@ -92,7 +91,7 @@ def read_data_from_cache_wrapper(
         pa_request_id,
         # list of attributes at the offer level that should be extracted from the cache
         pa_offer_level_items,
-        # list of attributes at the tripleg level that should be extracted from the cache
+        # list of attributes at the trip leg level that should be extracted from the cache
         pa_tripleg_level_items):
     retries = 5
 
