@@ -15,7 +15,6 @@ setup(
     author_email='cristian.consonni@eurecat.org',
     url='https://github.com/Ride2Rail/r2r-offer-utils/',
     license='MIT',
-    description='Utilities for building services in the Ride2Rail project.',
     long_description=__doc__,
     packages=packages,
     package_data=package_data,
