@@ -17,6 +17,5 @@ setup(
     license='MIT',
     long_description=__doc__,
     packages=packages,
-    package_data=package_data,
-    zip_safe=False
+    package_data=package_data
 )
