@@ -31,7 +31,14 @@ def zscore(offers: Mapping, flipped = False) -> Mapping:
     z_scores = {}
     if n > 0:
         average = sum / n
-        std = math.sqrt(sum_square / n - average * average)
+        temp    = sum_square / n - average * average
+        if (temp > 0 ):
+            std = math.sqrt(temp)
+        else:
+            if (abs(temp) <= 1e-10):
+                std = 0
+            else:
+                return None
         for o in offers:
             value = offers[o]
             if value is not None:
