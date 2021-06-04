@@ -9,15 +9,13 @@ package_data = {'': ['*']}
 
 setup(
     name='r2r_offer_utils',
-    version='0.2.0',
+    version='0.2.1',
     description='Utilities for building services in the Ride2Rail project.',
     author='Ride2Rail Project',
     author_email='cristian.consonni@eurecat.org',
     url='https://github.com/Ride2Rail/r2r-offer-utils/',
     license='MIT',
-    description='Utilities for building services in the Ride2Rail project.',
     long_description=__doc__,
     packages=packages,
-    package_data=package_data,
-    zip_safe=False
+    package_data=package_data
 )
