@@ -6,5 +6,5 @@ Repository r2r-offer-utils (directory r2r-offer-utils) contains utilities shared
 * "[logging.py](https://github.com/Ride2Rail/r2r-offer-utils/blob/main/r2r_offer_utils/logging.py)
 
 Repository r2r-offer-utils (directory r2r-omr-utils) contains utilities shared across components of the R2R offer matcher and ranker:
-* "[advanced_logger.py](https://github.com/Ride2Rail/r2r-omr-utils/wiki/advanced_logger.py)"
+* "[advanced_logger.py](https://github.com/Ride2Rail/r2r-offer-utils/blob/main/r2r_omr_utils/advanced_logger.py)"
 
