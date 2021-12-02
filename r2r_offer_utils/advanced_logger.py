@@ -1,7 +1,5 @@
-import pathlib
 import logging
 import configparser as cp
-
 import sys
 from os import path
 
