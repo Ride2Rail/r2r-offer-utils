@@ -9,7 +9,7 @@ main_module_name = path.splitext(path.basename(sys.modules["__main__"].__file__)
 logger = logging.getLogger(main_module_name)
 
 
-class MyLogger:
+class LoggerFormatter:
     """
     class to obtain the logger for errors into a file
     """
@@ -36,8 +36,8 @@ class MyLogger:
 
 class ConfigLoader:
     """
-    class serving to load the confing
-    if it fails it loggs the error into error_logger
+    class serving to load the config
+    if it fails it logs the error into error_logger
     """
 
     # loads the config, writes error if config not found
@@ -48,10 +48,15 @@ class ConfigLoader:
         if len(out) == 0:
             self.loaded = False
             logger.error(f'Config {main_module_name}.conf was not found')
-        elif int(self.config.get('running', 'verbose')):
-            my_logger.addConsoleLogger()
+        else:
+            self.loadVerbose(my_logger)
             logger.info("config loaded successfully")
 
+    # loads verbose option from the config
+    def loadVerbose(self, my_logger):
+        if int(self.config.get('running', 'verbose')):
+            my_logger.addConsoleLogger()
 
-my_logger = MyLogger()
-my_configLoader = ConfigLoader(my_logger)
+
+# load the config with anonymous instances
+config = ConfigLoader(LoggerFormatter()).config
