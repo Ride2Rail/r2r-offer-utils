@@ -9,7 +9,7 @@ package_data = {'': ['*']}
 
 setup(
     name='r2r_offer_utils',
-    version='0.2.2',
+    version='0.2.3',
     description='Utilities for building services in the Ride2Rail project.',
     author='Ride2Rail Project',
     author_email='cristian.consonni@eurecat.org',

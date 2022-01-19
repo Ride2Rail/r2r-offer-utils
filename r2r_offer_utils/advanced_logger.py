@@ -1,10 +1,12 @@
 import logging
 import configparser as cp
 import sys
+import inspect
 from os import path
 
 # name of the main module
-main_module_name = path.splitext(path.basename(sys.modules["__main__"].__file__))[0]
+# main_module_name = path.splitext(path.basename(sys.modules["__main__"].__file__))[0]
+main_module_name = path.splitext(path.basename(inspect.stack()[0].filename))[0]
 # logger
 logger = logging.getLogger(main_module_name)
 
