@@ -7,12 +7,10 @@ from os import path
 # name of the main module
 # main_module_name = path.splitext(path.basename(sys.modules["__main__"].__file__))[0]
 # main_module_name = path.splitext(path.basename(inspect.stack()[0].filename))[0]
-main_module_name = path.splitext(path.basename(__file__))[0]
+# main_module_name = path.splitext(path.basename(__file__))[0]
 # logger
-logger = logging.getLogger(main_module_name)
-print("------------------------------")
-print(f"new version of config in use, module name: {main_module_name}")
-print("------------------------------")
+# logger = logging.getLogger(main_module_name)
+
 
 class LoggerFormatter:
     """
@@ -64,4 +62,4 @@ class ConfigLoader:
 
 
 # load the config with anonymous instances
-config = ConfigLoader(LoggerFormatter()).config
+# config = ConfigLoader(LoggerFormatter()).config
