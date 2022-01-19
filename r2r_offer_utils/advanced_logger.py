@@ -8,7 +8,6 @@ from os import path
 # main_module_name = path.splitext(path.basename(sys.modules["__main__"].__file__))[0]
 # main_module_name = path.splitext(path.basename(inspect.stack()[0].filename))[0]
 # main_module_name = path.splitext(path.basename(__file__))[0]
-# logger
 # logger = logging.getLogger(main_module_name)
 
 
@@ -18,14 +17,15 @@ class LoggerFormatter:
     """
 
     # initiates config logging error to the log which name is specified in the error_file parameter
-    def __init__(self, error_file="error"):
+    def __init__(self, logger, error_file="error"):
         self.formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                                            datefmt='%Y-%m-%d %H:%M:%S')
         fh = logging.FileHandler(f'{error_file}.log')
-        logger.setLevel(logging.DEBUG)
+        self.logger = logger
+        self.logger.setLevel(logging.DEBUG)
         fh.setLevel(logging.ERROR)
         fh.setFormatter(self.formatter)
-        logger.addHandler(fh)
+        self.logger.addHandler(fh)
         self.verboseConsole = 0
 
     # adds logger that logs INFO into console (terminal)
@@ -33,7 +33,7 @@ class LoggerFormatter:
         ch = logging.StreamHandler()
         ch.setLevel(logging_level)
         ch.setFormatter(self.formatter)
-        logger.addHandler(ch)
+        self.logger.addHandler(ch)
         self.verboseConsole = 1
 
 
@@ -44,21 +44,21 @@ class ConfigLoader:
     """
 
     # loads the config, writes error if config not found
-    def __init__(self, my_logger):
+    def __init__(self, logger_formatter, main_module_name):
         self.config = cp.ConfigParser()
         out = self.config.read(f'{main_module_name}.conf')
         self.loaded = True
         if len(out) == 0:
             self.loaded = False
-            logger.error(f'Config {main_module_name}.conf was not found')
+            logger_formatter.logger.error(f'Config {main_module_name}.conf was not found')
         else:
-            self.loadVerbose(my_logger)
-            logger.info("config loaded successfully")
+            self.loadVerbose(logger_formatter)
+            logger_formatter.logger.info("config loaded successfully")
 
     # loads verbose option from the config
-    def loadVerbose(self, my_logger):
+    def loadVerbose(self, logger_formatter):
         if int(self.config.get('running', 'verbose')):
-            my_logger.addConsoleLogger()
+            logger_formatter.addConsoleLogger()
 
 
 # load the config with anonymous instances
